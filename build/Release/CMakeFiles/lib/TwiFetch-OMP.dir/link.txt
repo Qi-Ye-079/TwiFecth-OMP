@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib/TwiFetch-OMP.a  CMakeFiles/lib/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o CMakeFiles/lib/TwiFetch-OMP.dir/src/misc.cpp.o CMakeFiles/lib/TwiFetch-OMP.dir/src/example.cpp.o CMakeFiles/lib/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o CMakeFiles/lib/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o CMakeFiles/lib/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o
+/usr/bin/ranlib liblib/TwiFetch-OMP.a

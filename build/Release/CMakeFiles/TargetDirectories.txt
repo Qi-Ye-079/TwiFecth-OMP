@@ -1,4 +1,0 @@
-/home/nanaya/OpenMP-SearchTweet/build/Release/CMakeFiles/edit_cache.dir
-/home/nanaya/OpenMP-SearchTweet/build/Release/CMakeFiles/rebuild_cache.dir
-/home/nanaya/OpenMP-SearchTweet/build/Release/CMakeFiles/twifetchomp.dir
-/home/nanaya/OpenMP-SearchTweet/build/Release/CMakeFiles/TwiFetch-OMP.dir

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libTARGET.a  CMakeFiles/TARGET.dir/src/TweetFetcher.cpp.o CMakeFiles/TARGET.dir/src/misc.cpp.o CMakeFiles/TARGET.dir/src/example.cpp.o CMakeFiles/TARGET.dir/include/SHA1/base64.cpp.o CMakeFiles/TARGET.dir/include/SHA1/SHA1.cpp.o CMakeFiles/TARGET.dir/include/SHA1/HMAC_SHA1.cpp.o
-/usr/bin/ranlib libTARGET.a

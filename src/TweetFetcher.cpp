@@ -3,7 +3,6 @@
 #include "SHA1/base64.h"
 #include "SHA1/HMAC_SHA1.h"
 
-#include <omp.h>
 #include <iostream>
 #include <algorithm>
 
@@ -138,12 +137,13 @@ void TweetFetcher::collectParameters(const string& baseUrl,
   	buildRawParamString(parameters, ", ", rawParams);
 }
 
-void TweetFetcher::generateHeader(const string& url, string& httpHeader)
+string TweetFetcher::generateHeader(const string& url)
 {
 	// First split URL as base url and data
-    string baseUrl(""), dataUrl("");
+    string baseUrl(""), dataUrl(""), httpHeader("");
 	size_t pos = url.find_first_of("?");
     if (pos != string::npos) {
+        // Split base and data parts of URL
 		baseUrl = url.substr(0, pos);
 		dataUrl = url.substr(pos + 1);
 
@@ -152,9 +152,11 @@ void TweetFetcher::generateHeader(const string& url, string& httpHeader)
 		collectParameters(baseUrl, dataUrl, rawParams);
 
 		// Get complete header
-		httpHeader = "Authorization: OAuth ";
+        httpHeader = "Authorization: OAuth ";
 		httpHeader.append(rawParams);
 	}
+
+    return httpHeader;
 
 }
 
@@ -202,14 +204,12 @@ void TweetFetcher::generateNonceAndTimeStamp()
 
 bool TweetFetcher::request(const string& URL, const string& query)
 {
-	struct curl_slist *headers = nullptr;
-
 	// Get and set complete OAuth header for request
-    string OAuthHeader("");
-	generateHeader(URL+query, OAuthHeader);
+    string OAuthHeader = generateHeader(URL+query);
     if (!OAuthHeader.length())
         return false;
 
+    curl_slist *headers = nullptr;
 	headers = curl_slist_append(headers, OAuthHeader.c_str());
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -219,8 +219,7 @@ bool TweetFetcher::request(const string& URL, const string& query)
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-	resCode = curl_easy_perform(curl);
-	if (resCode == CURLE_OK) {
+    if (curl_easy_perform(curl) == CURLE_OK) {
         if (headers)
             curl_slist_free_all(headers);
 		return true;

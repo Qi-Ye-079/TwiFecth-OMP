@@ -25,6 +25,8 @@ string
 -
 
 ../include/TweetFetcher.h
+omp.h
+-
 curl/curl.h
 ../include/curl/curl.h
 misc.h
@@ -313,8 +315,6 @@ SHA1/base64.h
 /home/nanaya/twifetch-omp/src/SHA1/base64.h
 SHA1/HMAC_SHA1.h
 /home/nanaya/twifetch-omp/src/SHA1/HMAC_SHA1.h
-omp.h
--
 iostream
 -
 algorithm

@@ -1,6 +1,7 @@
 #ifndef TWEETAPI_H
 #define TWEETAPI_H
 
+#include <omp.h>
 #include "curl/curl.h"
 #include "misc.h"
 
@@ -19,7 +20,6 @@ private:
 
     // Url request/response handler
     CURL *curl;
-    CURLcode resCode;
 
     // ======== Helper functions to generate OAuth header ===========
     void generateNonceAndTimeStamp();
@@ -34,7 +34,7 @@ private:
 
     void collectParameters(const string&, const string&, string&);
 
-    void generateHeader(const string&, string&);
+    string generateHeader(const string&);
 
     void buildRawParamString(const OAuthParamPairs&, const string&, string&);
 

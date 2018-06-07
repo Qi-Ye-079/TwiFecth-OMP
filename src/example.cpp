@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     const string query = "Trump";  // Search query
-    const int count = 4800;        // Number of tweets to fetch
+    const int count = 800;        // Number of tweets to fetch
     const int numThreads = 8;      // Number of threads to use
 
     // keys and tokens from the Twitter App.
@@ -15,15 +15,15 @@ int main(int argc, char *argv[])
     const string accessToken = "1738543285-5gCabhy3H9MfgugIpoSXx5Ui4WZIX5aZODHep5n";
     const string accessTokenSecret = "rw6QxaX8pCZtzJe0Y49QwX0JsnmoueYyipIFMr5ZQGTX5";
 
-    // Search tweets in parallel with OpenMP
-    StringList resps(100);
-
-    // Create a new tweet fetcher
+    // Create a tweet fetcher
     TweetFetcher tf(apiKey, apiSecret, accessToken, accessTokenSecret);
 
-    // Search and print tweets
+    // Search tweets in parallel with OpenMP
+    StringList resps;
     if (tf.searchWithOmp(query, count))
         tf.getResponse(resps);
+
+    // Print all tweets
     for (const string &s: resps)
         cout << s << endl;
     cout << "==========================================================" << endl;

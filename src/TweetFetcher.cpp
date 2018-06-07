@@ -11,22 +11,29 @@
 using namespace rapidjson;
 using namespace misc;
 
-static size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp)
+static bool reallocMemory(Response *resp, char *contents, size_t dataSize)
 {
-    size_t dataSize = size * nmemb; // Get the size of received data
-    Response *mem = (Response*)userp; // Pointer to the chunk that saves the data
-
     // Grow the size of the chunk by dataSize + 1
-    mem->memory = (char*)realloc(mem->memory, mem->size + dataSize + 1);
-    if (mem->memory == NULL) {
+    resp->memory = (char*)realloc(resp->memory, resp->size + dataSize + 1);
+    if (resp->memory == NULL) {
         printf("Out of memory!!");
-        return 0;
+        return false;
     }
 
     /* Copy the received data to the grown area of chunk */
-    memcpy(&(mem->memory[mem->size]), contents, dataSize);
-    mem->size += dataSize;
-    mem->memory[mem->size] = 0;
+    memcpy(&(resp->memory[resp->size]), contents, dataSize);
+    resp->size += dataSize;
+    resp->memory[resp->size] = 0;
+
+    return true;
+}
+
+static size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp)
+{
+    size_t dataSize = size * nmemb;   // Get the size of received data
+    Response *mem = (Response*)userp; // Pointer to the chunk that saves the data
+
+    reallocMemory(mem, contents, dataSize);
 
     return dataSize;
 }

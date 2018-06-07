@@ -552,3 +552,51 @@ make[1]: Leaving directory '/home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp'
     Feature record: CXX_FEATURE:0cxx_variable_templates
     Feature record: CXX_FEATURE:0cxx_variadic_macros
     Feature record: CXX_FEATURE:0cxx_variadic_templates
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_290cc/fast"
+/usr/bin/make -f CMakeFiles/cmTC_290cc.dir/build.make CMakeFiles/cmTC_290cc.dir/build
+make[1]: Entering directory '/home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_290cc.dir/src.c.o
+/usr/bin/cc    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTC_290cc.dir/src.c.o   -c /home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_290cc
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_290cc.dir/link.txt --verbose=1
+/usr/bin/cc   -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTC_290cc.dir/src.c.o  -o cmTC_290cc -rdynamic 
+make[1]: Leaving directory '/home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_fc471/fast"
+/usr/bin/make -f CMakeFiles/cmTC_fc471.dir/build.make CMakeFiles/cmTC_fc471.dir/build
+make[1]: Entering directory '/home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fc471.dir/src.cxx.o
+/usr/bin/c++     -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTC_fc471.dir/src.cxx.o -c /home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_fc471
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fc471.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTC_fc471.dir/src.cxx.o  -o cmTC_fc471 -rdynamic 
+make[1]: Leaving directory '/home/nanaya/twifetch-omp/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+

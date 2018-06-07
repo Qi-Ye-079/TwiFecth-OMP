@@ -21,7 +21,7 @@ struct Response {
 
 namespace misc
 {
-    void pyAnalyzeSentiment(const StringList& list, int& numPos, int& numNeg);
+    void pyAnalyzeSentiment(const StringList *list, int& numPos, int& numNeg);
 
     string char2hex(char dec);
 

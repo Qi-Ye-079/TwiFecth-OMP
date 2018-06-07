@@ -16,15 +16,12 @@ private:
     string timeStamp;
 
     // Fetched response from the Twitter's API
-    string response;
-
-    // Url request/response handler
-    CURL *curl;
+    StringList *responses;
 
     // ======== Helper functions to generate OAuth header ===========
     void generateNonceAndTimeStamp();
 
-    bool request(const string&, const string&);
+    bool request(const string&, const string&, int count, int numThreads);
 
     string generateSignature(const string&, OAuthParamPairs&);
 
@@ -38,20 +35,27 @@ private:
 
     void buildRawParamString(const OAuthParamPairs&, const string&, string&);
 
-    void resetResponseMem();
+    void extractTextIntoList(StringList& resps, string& responseStr);
 
 public:
-    TweetFetcher(const string& cKey,
-                 const string& cSecret,
-                 const string& aToken,
-                 const string& aTokenSecret);
+    TweetFetcher();
+
+    TweetFetcher(const string &cKey,
+                 const string &cSecret,
+                 const string &aToken,
+                 const string &aTokenSecret);
+
+    TweetFetcher(const TweetFetcher &other);
+
+    TweetFetcher& operator=(const TweetFetcher &other);
 
     ~TweetFetcher();
 
-    bool searchWithOmp(const string& query, int count, int numThreads = 1);
+    bool searchWithOmp(const string &query, int count, int numThreads = 1);
 
-    void getResponse(StringList& resps);
+    const StringList* getResponseListPtr() const;
 
+    friend ostream& operator<<(ostream &os, const TweetFetcher &tf);
 };
 
 #endif // TWEETAPI_H

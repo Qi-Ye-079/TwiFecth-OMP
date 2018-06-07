@@ -1,7 +1,7 @@
 #include "misc.h"
 #include <python2.7/Python.h>
 
-void misc::pyAnalyzeSentiment(const StringList &list, int &numPos, int &numNeg)
+void misc::pyAnalyzeSentiment(const StringList *list, int &numPos, int &numNeg)
 {
        PyObject *pModule, *pFunc, *pList, *pValue;
 
@@ -21,7 +21,7 @@ void misc::pyAnalyzeSentiment(const StringList &list, int &numPos, int &numNeg)
            pFunc = PyObject_GetAttrString(pModule, "sentiment_count");
 
            pList = PyList_New(0);
-           for (const std::string& s : list) {
+           for (const std::string& s : *list) {
                PyObject *str = PyUnicode_FromString(s.c_str());
                PyList_Append(pList, str);
            }

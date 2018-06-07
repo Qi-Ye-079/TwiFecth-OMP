@@ -10,15 +10,19 @@
 using namespace rapidjson;
 using namespace misc;
 
+// ================== Local helper function ======================
 static size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp)
 {
-    //size_t dataSize = size * nmemb;   // Get the size of received data
-    //Response *mem = (Response*)userp; // Pointer to the chunk that saves the data
     string *s = (string*)userp;
     s->append(contents);
-    //reallocMemory(mem, contents, dataSize);
 
-    return size * nmemb;//dataSize;
+    return size * nmemb;
+}
+
+
+// ================= Public functions of TweetFetcher ==================
+TweetFetcher::TweetFetcher(): TweetFetcher("", "", "", "")
+{
 }
 
 TweetFetcher::TweetFetcher(const string& cKey,
@@ -26,35 +30,91 @@ TweetFetcher::TweetFetcher(const string& cKey,
                            const string& aToken,
                            const string& aTokenSecret):
     consumerKey(cKey), consumerSecret(cSecret), accessToken(aToken), accessTokenSecret(aTokenSecret),
-    nonce(""), timeStamp(""), response("")
+    nonce(""), timeStamp("")
 {
+    // Allocate the responses list on the heap
+    responses = new StringList();
+
     // Initialize winsock
     curl_global_init(CURL_GLOBAL_ALL);
+}
 
-    // Get a curl handler
-    curl = curl_easy_init();
+TweetFetcher::TweetFetcher(const TweetFetcher &other):
+    consumerKey(other.consumerKey),
+    consumerSecret(other.consumerSecret),
+    accessToken(other.accessToken),
+    accessTokenSecret(other.accessTokenSecret),
+    nonce(other.nonce),
+    timeStamp(other.timeStamp)
+{
+    // Copy the contents of the response list from other tweet fetcher
+    responses = new StringList(*other.responses);
 
-    // Initialize the memory chunk to store response
-    //response.memory = (char*)malloc(1);
-    //response.size = 0;
+    // Initialize the curl globally
+    curl_global_init(CURL_GLOBAL_ALL);
+}
+
+TweetFetcher& TweetFetcher::operator=(const TweetFetcher &other)
+{
+    // Check if assigning itself
+    if (&other == this)
+        return *this;
+
+    // Assign all values from other to this
+    consumerKey = other.consumerKey;
+    consumerSecret = other.consumerSecret;
+    accessToken = other.accessToken;
+    accessTokenSecret = other.accessTokenSecret;
+    nonce = other.nonce;
+    timeStamp = other.timeStamp;
+
+    // First deallocate the memory of this response list
+    responses->clear();
+    delete responses;
+    // Then copy the list from other
+    responses = new StringList(*other.responses);
+
+    // Initialize the curl globally
+    curl_global_init(CURL_GLOBAL_ALL);
 }
 
 TweetFetcher::~TweetFetcher()
 {
-    // Clean the CURL and free the response's memory
-  	curl_easy_cleanup(curl);
-    //free(response.memory);
+    // Clean the CURL
   	curl_global_cleanup();
+    // free the response's memory
+    responses->clear();
+    delete responses;
 }
 
-void TweetFetcher::resetResponseMem()
+bool TweetFetcher::searchWithOmp(const string& query, int count, int numThreads)
 {
-    //free(response.memory);
-    //response.memory = (char*)malloc(1);
-    //response.size = 0;
-    response.clear();
+    // Build the search url with query
+    string url = "https://api.twitter.com/1.1/search/tweets.json?count=100&lang=en&include_entities=false&q=";
+
+    // Start the https request
+    return request(url, query, count, numThreads); //&& (response.size != 0);
 }
 
+const StringList* TweetFetcher::getResponseListPtr() const
+{
+    return responses;
+}
+
+ostream& operator<<(ostream &os, const TweetFetcher &tf)
+{
+    os << "====== Printing info for Tweet Fethcer =======" << endl;
+    os << "Consumer Key: " << tf.consumerKey << endl;
+    os << "Consumer Secret: " << tf.consumerSecret << endl;
+    os << "Access Token: " << tf.accessToken << endl;
+    os << "Access Token Secret: " << tf.accessTokenSecret << endl;
+    os << "============================================================" << endl;
+    os << "There are now " << tf.responses->size() << " responses stored in this Tweet Fetcher." << endl;
+    return os;
+}
+
+
+// ===================== Private functions of Tweet Function ==================
 string TweetFetcher::generateSignature(const string& baseUrl, OAuthParamPairs& parameters)
 {
     string rawParams("");
@@ -67,11 +127,11 @@ string TweetFetcher::generateSignature(const string& baseUrl, OAuthParamPairs& p
     string signingKey = percentEncode(consumerSecret) + "&" + percentEncode(accessTokenSecret);
 
 	  // 4: Calculate the signature using HMAC_SHA1 algorithm
-	  BYTE digest[20];
-	  memset(digest, 0, 20);
+    BYTE digest[20];
+    memset(digest, 0, 20);
 
-	  CHMAC_SHA1 hmacsha1;
-	  hmacsha1.HMAC_SHA1((BYTE*)baseSig.c_str(), baseSig.length(), (BYTE*)signingKey.c_str(), signingKey.length(), digest);
+    CHMAC_SHA1 hmacsha1;
+    hmacsha1.HMAC_SHA1((BYTE*)baseSig.c_str(), baseSig.length(), (BYTE*)signingKey.c_str(), signingKey.length(), digest);
 
     // 5: Base64 encode
     string b64en = base64_encode(digest, 20);
@@ -202,112 +262,100 @@ void TweetFetcher::generateNonceAndTimeStamp()
 	timeStamp = szTime;
 }
 
-bool TweetFetcher::request(const string& URL, const string& query)
+
+void TweetFetcher::extractTextIntoList(StringList& resps, string& response)
+{
+    if (!response.empty())
+    {
+        // Parse the response string to DOM-styled JSON
+        Document d;
+        d.Parse(response.c_str());
+
+        // Reset response memory
+        // response.clear();
+
+        assert(d.IsObject());
+
+        if (d.HasMember("statuses"))
+        {
+            // Extract tweets from parsed JSON
+            const Value& rootArr = d["statuses"];
+            for (auto &e : rootArr.GetArray())
+            {
+                string text = e["text"].GetString();
+                resps.push_back(text);
+            }
+        }
+        else
+        {
+            printf("Rate limit execeeded!! Please try again after 15 minutes.\n\n");
+            exit(1);
+        }
+    }
+}
+
+
+bool TweetFetcher::request(const string& URL, const string& query, int count, int numThreads)
 {
 	// Get and set complete OAuth header for request
     string OAuthHeader = generateHeader(URL+query);
     if (!OAuthHeader.length())
         return false;
 
-    curl_slist *headers = nullptr;
-	headers = curl_slist_append(headers, OAuthHeader.c_str());
-	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    bool success = true;
 
-	// Send request
-	curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
-	curl_easy_setopt(curl, CURLOPT_URL, (URL+percentEncode(query)).c_str());
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    // Start fetching tweets in parallel with OpenMP
+    #pragma omp parallel num_threads(numThreads)
+    {
+        // The list to store the parsed response strings
+        StringList tRespList;
+        bool tSuccess = true;
 
-    if (curl_easy_perform(curl) == CURLE_OK) {
-        if (headers)
-            curl_slist_free_all(headers);
-		return true;
-	}
-	else {
-		return false;
-	}
-}
+        // Create curl handler of this thread
+        CURL *threadCurl = curl_easy_init();
 
-bool TweetFetcher::searchWithOmp(const string& query, int count, int numThreads)
-{
-	// Build the search url with query
-    string countStr = std::to_string(count);
-    string url = "https://api.twitter.com/1.1/search/tweets.json?count=100&lang=en&include_entities=false&q=";
-
-	// Start the https request
-    return request(url, query); //&& (response.size != 0);
-}
-
-void TweetFetcher::getResponse(StringList& resps)
-{
-    if (!response.empty()) {
-
-		// Parse the response string to DOM-styled JSON
-		Document d;
-        d.Parse(response.c_str());
-
-		// Reset response memory
-        response.clear();
-
-        if (d.HasMember("statuses"))
+        // Loop to fetch the tweets
+        for (int i = 0; i < count / 100 /numThreads; ++i)
         {
-			// Extract tweets from parsed JSON
-			const Value& rootArr = d["statuses"];
-            for (auto &e : rootArr.GetArray())
+            // The raw response string from a single request in json format
+            string resp("");
+
+            // Process CURL request handling
+            curl_slist *headers = nullptr;
+            headers = curl_slist_append(headers, OAuthHeader.c_str());
+            curl_easy_setopt(threadCurl, CURLOPT_HTTPHEADER, headers);
+
+            // Send request
+            curl_easy_setopt(threadCurl, CURLOPT_HTTPGET, 1);
+            curl_easy_setopt(threadCurl, CURLOPT_URL, (URL+percentEncode(query)).c_str());
+            curl_easy_setopt(threadCurl, CURLOPT_WRITEFUNCTION, write_callback);
+            curl_easy_setopt(threadCurl, CURLOPT_WRITEDATA, &resp);
+            if (curl_easy_perform(threadCurl) == CURLE_OK)
             {
-                string text = e["text"].GetString();
-				resps.push_back(text);
-			}
-		}
-        else
+                // Extract all strings into the thread string list
+                extractTextIntoList(tRespList, resp);
+
+                // Set success to true
+                tSuccess = tSuccess && true;
+            }
+            else {
+                tSuccess = tSuccess && false;
+            }
+
+            // Free all curl headers
+            if (headers)
+                curl_slist_free_all(headers);
+        }
+
+        // Clean up Curl handler for this thread
+        curl_easy_cleanup(threadCurl);
+
+        #pragma omp critical
         {
-			printf("Rate limit execeeded!! Please try again after 15 minutes.\n\n");
-			exit(1);
-		}
-	}
+            success = success && tSuccess;
+            responses->splice(responses->end(), tRespList);
+        }
+    }
 
+    return success;
 }
-
-/*
-void TweetApi::searchWithOMP(const string& cKey, const string& cSecret, const string& aToken, const string& aTokenSecret,
-                             const string& query, const int& count, const int& numThreads)
-{
-	// Responses and number of tweets
-	StringList resps;
-	int numPos = 0, numNeg = 0;
-
-	auto start = Clock::now();
-	#pragma omp parallel num_threads(numThreads)
-	{
-		TweetApi api(cKey, cSecret, aToken, aTokenSecret);
-		StringList partialResp;
-
-		#pragma omp for ordered
-		for (int i = 0; i < count / 100; ++i) {
-			if (api.search(query, 100)) {
-				api.getResponse(partialResp);
-			}
-		}
-		#pragma omp critical
-		{
-			resps.splice(resps.end(), partialResp);
-		}
-	}
-
-	auto fetch = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count();
-
-	// Initialize Python program for sentiment analysis
-	pyAnalyzeSentiment(resps, numPos, numNeg);
-
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count();
-
-    for (const string& s : resps) printf("%s", s.c_str());
-	int numTweets = resps.size();
-	printf("\n\n=======================\nTotal number of tweets: %d", numTweets);
-	printf("\nNumber of positive tweets: %d, percentage: %2.2f%%", numPos, numPos*100.f / numTweets);
-	printf("\nNumber of negative tweets: %d, percentage: %2.2f%%", numNeg, numNeg*100.f / numTweets);
-	printf("\n\nTime for fetching %d tweets: %2.3f seconds", numTweets, fetch / 1000.f);
-	printf("\nTime for sentiment analysis: %2.3f seconds, ", (duration - fetch) / 1000.f);
-	printf("\nThe total execution time: %2.3f sec.\n\n", duration / 1000.f);
-}*/

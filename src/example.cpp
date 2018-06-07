@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     TweetFetcher tf(apiKey, apiSecret, accessToken, accessTokenSecret);
 
     // Search and print tweets
-    if (tf.search(query, count))
+    if (tf.searchWithOmp(query, count))
         tf.getResponse(resps);
     for (const string &s: resps)
         cout << s << endl;

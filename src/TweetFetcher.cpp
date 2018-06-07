@@ -11,31 +11,15 @@
 using namespace rapidjson;
 using namespace misc;
 
-static bool reallocMemory(Response *resp, char *contents, size_t dataSize)
-{
-    // Grow the size of the chunk by dataSize + 1
-    resp->memory = (char*)realloc(resp->memory, resp->size + dataSize + 1);
-    if (resp->memory == NULL) {
-        printf("Out of memory!!");
-        return false;
-    }
-
-    /* Copy the received data to the grown area of chunk */
-    memcpy(&(resp->memory[resp->size]), contents, dataSize);
-    resp->size += dataSize;
-    resp->memory[resp->size] = 0;
-
-    return true;
-}
-
 static size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp)
 {
-    size_t dataSize = size * nmemb;   // Get the size of received data
-    Response *mem = (Response*)userp; // Pointer to the chunk that saves the data
+    //size_t dataSize = size * nmemb;   // Get the size of received data
+    //Response *mem = (Response*)userp; // Pointer to the chunk that saves the data
+    string *s = (string*)userp;
+    s->append(contents);
+    //reallocMemory(mem, contents, dataSize);
 
-    reallocMemory(mem, contents, dataSize);
-
-    return dataSize;
+    return size * nmemb;//dataSize;
 }
 
 TweetFetcher::TweetFetcher(const string& cKey,
@@ -43,7 +27,7 @@ TweetFetcher::TweetFetcher(const string& cKey,
                            const string& aToken,
                            const string& aTokenSecret):
     consumerKey(cKey), consumerSecret(cSecret), accessToken(aToken), accessTokenSecret(aTokenSecret),
-    nonce(""), timeStamp("")
+    nonce(""), timeStamp(""), response("")
 {
     // Initialize winsock
     curl_global_init(CURL_GLOBAL_ALL);
@@ -52,23 +36,24 @@ TweetFetcher::TweetFetcher(const string& cKey,
     curl = curl_easy_init();
 
     // Initialize the memory chunk to store response
-    response.memory = (char*)malloc(1);
-    response.size = 0;
+    //response.memory = (char*)malloc(1);
+    //response.size = 0;
 }
 
 TweetFetcher::~TweetFetcher()
 {
     // Clean the CURL and free the response's memory
   	curl_easy_cleanup(curl);
-  	free(response.memory);
+    //free(response.memory);
   	curl_global_cleanup();
 }
 
 void TweetFetcher::resetResponseMem()
 {
-  	free(response.memory);
-  	response.memory = (char*)malloc(1);
-  	response.size = 0;
+    //free(response.memory);
+    //response.memory = (char*)malloc(1);
+    //response.size = 0;
+    response.clear();
 }
 
 string TweetFetcher::generateSignature(const string& baseUrl, OAuthParamPairs& parameters)
@@ -245,27 +230,26 @@ bool TweetFetcher::request(const string& URL, const string& query)
 	}
 }
 
-bool TweetFetcher::search(const string& query, int count)
+bool TweetFetcher::searchWithOmp(const string& query, int count, int numThreads)
 {
 	// Build the search url with query
     string countStr = std::to_string(count);
-    string url = "https://api.twitter.com/1.1/search/tweets.json?count=" +
-				   countStr + "&lang=en&include_entities=false&q=";
+    string url = "https://api.twitter.com/1.1/search/tweets.json?count=100&lang=en&include_entities=false&q=";
 
 	// Start the https request
-    return request(url, query) && (response.size != 0);
+    return request(url, query); //&& (response.size != 0);
 }
 
 void TweetFetcher::getResponse(StringList& resps)
 {
-    if (response.size) {
+    if (!response.empty()) {
 
 		// Parse the response string to DOM-styled JSON
 		Document d;
-		d.Parse(response.memory);
+        d.Parse(response.c_str());
 
 		// Reset response memory
-		resetResponseMem();
+        response.clear();
 
         if (d.HasMember("statuses"))
         {

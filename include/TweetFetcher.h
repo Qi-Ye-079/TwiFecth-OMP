@@ -15,7 +15,7 @@ private:
     string timeStamp;
 
     // Fetched response from the Twitter's API
-    Response response;
+    string response;
 
     // Url request/response handler
     CURL *curl;
@@ -48,7 +48,7 @@ public:
 
     ~TweetFetcher();
 
-    bool search(const string& query, int count);
+    bool searchWithOmp(const string& query, int count, int numThreads = 1);
 
     void getResponse(StringList& resps);
 

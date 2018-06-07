@@ -31,10 +31,7 @@ int main(int argc, char *argv[])
     // Analyze the sentiments of fetched tweets
     int numPos = 0, numNeg = 0;
     misc::pyAnalyzeSentiment(resps, numPos, numNeg);
-
-    cout << "Percent of positive: " << numPos/count << ", percent of negative: " << numNeg/count << "." << endl;
-
-    //delete resps;
+    cout << "Number of positive: " << numPos << ", number of negative: " << numNeg << "." << endl;
 
 	return 0;
 }

@@ -1,6 +1,6 @@
 import re
 from textblob import TextBlob
-import time
+#import time
 
 
 def clean_tweet(tweet):

@@ -3,15 +3,14 @@
 
 void misc::pyAnalyzeSentiment(const StringList &list, int &numPos, int &numNeg)
 {
-
        PyObject *pModule, *pFunc, *pList, *pValue;
 
        Py_Initialize();
        PyRun_SimpleString("import re");
        PyRun_SimpleString("from textblob import TextBlob");
 
-       PySys_SetPath(".");
-       pModule = PyImport_ImportModule("analyze_sentiment");
+       PySys_SetPath("../src/python");
+       pModule = PyImport_ImportModule("sentiment_analysis");
 
        if (!pModule) {
            PyErr_Print();
@@ -20,7 +19,7 @@ void misc::pyAnalyzeSentiment(const StringList &list, int &numPos, int &numNeg)
        }
        else {
            pFunc = PyObject_GetAttrString(pModule, "sentiment_count");
-           
+
            pList = PyList_New(0);
            for (const std::string& s : list) {
                PyObject *str = PyUnicode_FromString(s.c_str());
@@ -48,6 +47,7 @@ void misc::pyAnalyzeSentiment(const StringList &list, int &numPos, int &numNeg)
                exit(1);
            }
        }
+
 }
 
 string misc::percentEncode(const std::string &s)

@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     const string query = "Trump";  // Search query
-    const int count = 500;        // Number of tweets to fetch
+    const int count = 4000;        // Number of tweets to fetch
     const int numThreads = 5;      // Number of threads to use
 
     // keys and tokens from the Twitter App.

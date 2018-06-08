@@ -302,14 +302,14 @@ bool TweetFetcher::request(const string& URL, const string& query, int count, in
     if (!OAuthHeader.length())
         return false;
 
-    bool success = true;
+    bool success = false;
 
     // Start fetching tweets in parallel with OpenMP
     #pragma omp parallel num_threads(numThreads)
     {
         // The list to store the parsed response strings
         StringList tRespList;
-        bool tSuccess = true;
+        bool tSuccess = false;
 
         // Create curl handler of this thread
         CURL *threadCurl = curl_easy_init();
@@ -336,10 +336,7 @@ bool TweetFetcher::request(const string& URL, const string& query, int count, in
                 extractTextIntoList(tRespList, resp);
 
                 // Set success to true
-                tSuccess = tSuccess && true;
-            }
-            else {
-                tSuccess = tSuccess && false;
+                tSuccess = tSuccess || true;
             }
 
             // Free all curl headers
@@ -352,7 +349,7 @@ bool TweetFetcher::request(const string& URL, const string& query, int count, in
 
         #pragma omp critical
         {
-            success = success && tSuccess;
+            success = success || tSuccess;
             responses->splice(responses->end(), tRespList);
         }
     }

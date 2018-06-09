@@ -226,6 +226,36 @@ include/SHA1/base64.cpp.s:
 	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.s
 .PHONY : include/SHA1/base64.cpp.s
 
+src/Sentiment.o: src/Sentiment.cpp.o
+
+.PHONY : src/Sentiment.o
+
+# target to build an object file
+src/Sentiment.cpp.o:
+	$(MAKE) -f CMakeFiles/twifetchomp.dir/build.make CMakeFiles/twifetchomp.dir/src/Sentiment.cpp.o
+	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o
+.PHONY : src/Sentiment.cpp.o
+
+src/Sentiment.i: src/Sentiment.cpp.i
+
+.PHONY : src/Sentiment.i
+
+# target to preprocess a source file
+src/Sentiment.cpp.i:
+	$(MAKE) -f CMakeFiles/twifetchomp.dir/build.make CMakeFiles/twifetchomp.dir/src/Sentiment.cpp.i
+	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.i
+.PHONY : src/Sentiment.cpp.i
+
+src/Sentiment.s: src/Sentiment.cpp.s
+
+.PHONY : src/Sentiment.s
+
+# target to generate assembly for a file
+src/Sentiment.cpp.s:
+	$(MAKE) -f CMakeFiles/twifetchomp.dir/build.make CMakeFiles/twifetchomp.dir/src/Sentiment.cpp.s
+	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.s
+.PHONY : src/Sentiment.cpp.s
+
 src/TweetFetcher.o: src/TweetFetcher.cpp.o
 
 .PHONY : src/TweetFetcher.o
@@ -335,6 +365,9 @@ help:
 	@echo "... include/SHA1/base64.o"
 	@echo "... include/SHA1/base64.i"
 	@echo "... include/SHA1/base64.s"
+	@echo "... src/Sentiment.o"
+	@echo "... src/Sentiment.i"
+	@echo "... src/Sentiment.s"
 	@echo "... src/TweetFetcher.o"
 	@echo "... src/TweetFetcher.i"
 	@echo "... src/TweetFetcher.s"

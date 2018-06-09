@@ -11,6 +11,8 @@ CMakeFiles/twifetchomp.dir/include/SHA1/SHA1.cpp.o: ../include/SHA1/SHA1.h
 CMakeFiles/twifetchomp.dir/include/SHA1/base64.cpp.o: ../include/SHA1/base64.cpp
 CMakeFiles/twifetchomp.dir/include/SHA1/base64.cpp.o: ../include/SHA1/base64.h
 
+CMakeFiles/twifetchomp.dir/src/Sentiment.cpp.o: ../src/Sentiment.cpp
+
 CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o: ../include/SHA1/HMAC_SHA1.h
 CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o: ../include/SHA1/SHA1.h
 CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o: ../include/SHA1/base64.h
@@ -44,6 +46,7 @@ CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o: ../include/rapidjson/reader.h
 CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o: ../include/rapidjson/stream.h
 CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o: ../src/TweetFetcher.cpp
 
+CMakeFiles/twifetchomp.dir/src/example.cpp.o: ../include/Sentiment.h
 CMakeFiles/twifetchomp.dir/src/example.cpp.o: ../include/TweetFetcher.h
 CMakeFiles/twifetchomp.dir/src/example.cpp.o: ../include/curl/curl.h
 CMakeFiles/twifetchomp.dir/src/example.cpp.o: ../include/curl/curlver.h

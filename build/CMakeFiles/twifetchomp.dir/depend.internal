@@ -11,6 +11,8 @@ CMakeFiles/twifetchomp.dir/include/SHA1/SHA1.cpp.o
 CMakeFiles/twifetchomp.dir/include/SHA1/base64.cpp.o
  /home/nanaya/twifetch-omp/include/SHA1/base64.cpp
  /home/nanaya/twifetch-omp/include/SHA1/base64.h
+CMakeFiles/twifetchomp.dir/src/Sentiment.cpp.o
+ /home/nanaya/twifetch-omp/src/Sentiment.cpp
 CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o
  ../include/SHA1/HMAC_SHA1.h
  ../include/SHA1/SHA1.h
@@ -45,6 +47,7 @@ CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o
  ../include/rapidjson/stream.h
  /home/nanaya/twifetch-omp/src/TweetFetcher.cpp
 CMakeFiles/twifetchomp.dir/src/example.cpp.o
+ ../include/Sentiment.h
  ../include/TweetFetcher.h
  ../include/curl/curl.h
  ../include/curl/curlver.h

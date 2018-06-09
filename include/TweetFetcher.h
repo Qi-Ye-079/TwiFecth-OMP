@@ -5,45 +5,48 @@
 #include "curl/curl.h"
 #include "misc.h"
 
+// Type definitions
+using OAuthParamPairs = std::map<std::string, std::string>;
+
 // Tweet fetcher class
 class TweetFetcher {
 private:
-    string consumerKey;
-    string consumerSecret;
-    string accessToken;
-    string accessTokenSecret;
-    string nonce;
-    string timeStamp;
+    std::string consumerKey;
+    std::string consumerSecret;
+    std::string accessToken;
+    std::string accessTokenSecret;
+    std::string nonce;
+    std::string timeStamp;
 
     // Fetched response from the Twitter's API
-    StringList *responses;
+    std::list<std::string> *responses;
 
     // ======== Helper functions to generate OAuth header ===========
     void generateNonceAndTimeStamp();
 
-    bool request(const string&, const string&, int count, int numThreads);
+    bool request(const std::string&, const std::string&, int count, int numThreads);
 
-    string generateSignature(const string&, OAuthParamPairs&);
+    std::string generateSignature(const std::string&, OAuthParamPairs&);
 
-    void collectRequestPairs(string, OAuthParamPairs&);
+    void collectRequestPairs(std::string, OAuthParamPairs&);
 
-    void collectOAuthParams(const string&, OAuthParamPairs&);
+    void collectOAuthParams(const std::string&, OAuthParamPairs&);
 
-    void collectParameters(const string&, const string&, string&);
+    void collectParameters(const std::string&, const std::string&, std::string&);
 
-    string generateHeader(const string&);
+    std::string generateHeader(const std::string&);
 
-    void buildRawParamString(const OAuthParamPairs&, const string&, string&);
+    void buildRawParamString(const OAuthParamPairs&, const std::string&, std::string&);
 
-    void extractTextIntoList(StringList& resps, string& responseStr);
+    void extractTextIntoList(std::list<std::string>& resps, std::string& responseStr);
 
 public:
     TweetFetcher();
 
-    TweetFetcher(const string &cKey,
-                 const string &cSecret,
-                 const string &aToken,
-                 const string &aTokenSecret);
+    TweetFetcher(const std::string &cKey,
+                 const std::string &cSecret,
+                 const std::string &aToken,
+                 const std::string &aTokenSecret);
 
     TweetFetcher(const TweetFetcher &other);
 
@@ -51,11 +54,11 @@ public:
 
     ~TweetFetcher();
 
-    bool searchWithOmp(const string &query, int count, int numThreads = 1);
+    bool searchWithOmp(const std::string &query, int count, int numThreads = 1);
 
-    const StringList* getResponseListPtr() const;
+    std::list<std::string>* getResponseListPtr() const;
 
-    friend ostream& operator<<(ostream &os, const TweetFetcher &tf);
+    friend std::ostream& operator<<(std::ostream &os, const TweetFetcher &tf);
 };
 
 #endif // TWEETAPI_H

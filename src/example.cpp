@@ -1,44 +1,59 @@
 #include <iostream>
 #include <stdio.h>
 #include "TweetFetcher.h"
+#include "Sentiment.h"
+
+// Typs aliases
+using StringList = std::list<std::string>;
+using Clock = std::chrono::high_resolution_clock;
 
 int main(int argc, char *argv[])
 {
-    const string query = "Trump";  // Search query
-    const int count = 4000;        // Number of tweets to fetch
-    const int numThreads = 5;      // Number of threads to use
+    std::string query = "Trump";  // Search query
+    int count = 800;              // Number of tweets to fetch
+    int numThreads = 8;           // Number of threads to use
+    bool bAnalyzeSentiment = true;      // Whether or not analyze sentiment. Set it to false to disable sentiment analysis.
 
     // keys and tokens from the Twitter App.
     // Replace them with your own keys and secrets below.
-    const string apiKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    const string apiSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    const string accessToken = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    const string accessTokenSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    const std::string consumerKey = "7uGuUXw5gV1m33UxQUDrAgBGH";
+    const std::string consumerSecret = "WoggjUArpZ6VlZHTlMpAvvdXF7LivtB5jWGhYCnw9KssZHjlHn";
+    const std::string accessToken = "1738543285-5gCabhy3H9MfgugIpoSXx5Ui4WZIX5aZODHep5n";
+    const std::string accessTokenSecret = "rw6QxaX8pCZtzJe0Y49QwX0JsnmoueYyipIFMr5ZQGTX5";
 
     // Create a tweet fetcher
-    TweetFetcher tf(apiKey, apiSecret, accessToken, accessTokenSecret);
+    TweetFetcher tf(consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
     // Search tweets in parallel with OpenMP
-    const StringList *resps = nullptr;
+    StringList *resps = nullptr;
     if (tf.searchWithOmp(query, count, numThreads))
     {
         resps = tf.getResponseListPtr();
         if (resps && !resps->empty())
         {
-            cout << tf << endl;
-            // Print all tweets
-            for (const string &s: *resps)
-                cout << s << endl;
-            cout << "==========================================================" << endl;
+            // Print current status and all fetched tweets
+            std::cout << tf << std::endl;
+            for (const std::string &s: *resps)
+                std::cout << s << std::endl;
+            std::cout << "==========================================================" << std::endl;
 
-            // Analyze the sentiments of fetched tweets
-            int numPos = 0, numNeg = 0;
-            misc::pyAnalyzeSentiment(resps, numPos, numNeg);
-            cout << "Number of positive: " << numPos << ", number of negative: " << numNeg << "." << endl;
+            if (bAnalyzeSentiment)
+            {
+                // Initialize python environment and sentiment_analysnis module (crucial steps!!)
+                Py_Initialize();
+                initsentiment_analysis();
+
+                // Analyze the sentiments of fetched tweets and return the results pair (tuple from Python)
+                std::pair<int, int> results = sentiment_count(resps);
+                std::cout << "Number of positive: " << results.first << ", number of negative: " << results.second << "." << std::endl;
+
+                // Never forget to end python session
+                Py_Finalize();
+            }
         }
         else
         {
-            cout << "Oops!! No responses??" << endl;
+            std::cout << "Oops!! No responses??" << std::endl;
         }
     }
 

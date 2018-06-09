@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/nanaya/twifetch-omp/build
 CMakeFiles/twifetchomp.dir/all:
 	$(MAKE) -f CMakeFiles/twifetchomp.dir/build.make CMakeFiles/twifetchomp.dir/depend
 	$(MAKE) -f CMakeFiles/twifetchomp.dir/build.make CMakeFiles/twifetchomp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=8,9,10,11,12,13,14 "Built target twifetchomp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=9,10,11,12,13,14,15,16 "Built target twifetchomp"
 .PHONY : CMakeFiles/twifetchomp.dir/all
 
 # Include target in all.
@@ -76,7 +76,7 @@ all: CMakeFiles/twifetchomp.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/twifetchomp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nanaya/twifetch-omp/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nanaya/twifetch-omp/build/CMakeFiles 8
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/twifetchomp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nanaya/twifetch-omp/build/CMakeFiles 0
 .PHONY : CMakeFiles/twifetchomp.dir/rule
@@ -103,7 +103,7 @@ clean: CMakeFiles/twifetchomp.dir/clean
 CMakeFiles/TwiFetch-OMP.dir/all:
 	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/depend
 	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target TwiFetch-OMP"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target TwiFetch-OMP"
 .PHONY : CMakeFiles/TwiFetch-OMP.dir/all
 
 # Include target in all.
@@ -113,7 +113,7 @@ all: CMakeFiles/TwiFetch-OMP.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/TwiFetch-OMP.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nanaya/twifetch-omp/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nanaya/twifetch-omp/build/CMakeFiles 8
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/TwiFetch-OMP.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nanaya/twifetch-omp/build/CMakeFiles 0
 .PHONY : CMakeFiles/TwiFetch-OMP.dir/rule

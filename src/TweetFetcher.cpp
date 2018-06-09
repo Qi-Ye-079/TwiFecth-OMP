@@ -13,7 +13,7 @@ using namespace misc;
 // ================== Local helper function ======================
 static size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp)
 {
-    string *s = (string*)userp;
+    std::string *s = (std::string*)userp;
     s->append(contents);
 
     return size * nmemb;
@@ -25,15 +25,15 @@ TweetFetcher::TweetFetcher(): TweetFetcher("", "", "", "")
 {
 }
 
-TweetFetcher::TweetFetcher(const string& cKey,
-                           const string& cSecret,
-                           const string& aToken,
-                           const string& aTokenSecret):
+TweetFetcher::TweetFetcher(const std::string& cKey,
+                           const std::string& cSecret,
+                           const std::string& aToken,
+                           const std::string& aTokenSecret):
     consumerKey(cKey), consumerSecret(cSecret), accessToken(aToken), accessTokenSecret(aTokenSecret),
     nonce(""), timeStamp("")
 {
     // Allocate the responses list on the heap
-    responses = new StringList();
+    responses = new std::list<std::string>();
 
     // Initialize winsock
     curl_global_init(CURL_GLOBAL_ALL);
@@ -48,7 +48,7 @@ TweetFetcher::TweetFetcher(const TweetFetcher &other):
     timeStamp(other.timeStamp)
 {
     // Copy the contents of the response list from other tweet fetcher
-    responses = new StringList(*other.responses);
+    responses = new std::list<std::string>(*other.responses);
 
     // Initialize the curl globally
     curl_global_init(CURL_GLOBAL_ALL);
@@ -72,7 +72,7 @@ TweetFetcher& TweetFetcher::operator=(const TweetFetcher &other)
     responses->clear();
     delete responses;
     // Then copy the list from other
-    responses = new StringList(*other.responses);
+    responses = new std::list<std::string>(*other.responses);
 
     // Initialize the curl globally
     curl_global_init(CURL_GLOBAL_ALL);
@@ -87,44 +87,44 @@ TweetFetcher::~TweetFetcher()
     delete responses;
 }
 
-bool TweetFetcher::searchWithOmp(const string& query, int count, int numThreads)
+bool TweetFetcher::searchWithOmp(const std::string& query, int count, int numThreads)
 {
     // Build the search url with query
-    string url = "https://api.twitter.com/1.1/search/tweets.json?count=100&lang=en&include_entities=false&q=";
+    std::string url = "https://api.twitter.com/1.1/search/tweets.json?count=100&lang=en&include_entities=false&q=";
 
     // Start the https request
     return request(url, query, count, numThreads); //&& (response.size != 0);
 }
 
-const StringList* TweetFetcher::getResponseListPtr() const
+std::list<std::string>* TweetFetcher::getResponseListPtr() const
 {
     return responses;
 }
 
-ostream& operator<<(ostream &os, const TweetFetcher &tf)
+std::ostream& operator<<(std::ostream &os, const TweetFetcher &tf)
 {
-    os << "====== Printing info for Tweet Fethcer =======" << endl;
-    os << "Consumer Key: " << tf.consumerKey << endl;
-    os << "Consumer Secret: " << tf.consumerSecret << endl;
-    os << "Access Token: " << tf.accessToken << endl;
-    os << "Access Token Secret: " << tf.accessTokenSecret << endl;
-    os << "============================================================" << endl;
-    os << "There are now " << tf.responses->size() << " responses stored in this Tweet Fetcher." << endl;
+    os << "====== Printing info for Tweet Fethcer =======" << std::endl;
+    os << "Consumer Key: " << tf.consumerKey << std::endl;
+    os << "Consumer Secret: " << tf.consumerSecret << std::endl;
+    os << "Access Token: " << tf.accessToken << std::endl;
+    os << "Access Token Secret: " << tf.accessTokenSecret << std::endl;
+    os << "============================================================" << std::endl;
+    os << "There are now " << tf.responses->size() << " responses stored in this Tweet Fetcher." << std::endl;
     return os;
 }
 
 
 // ===================== Private functions of Tweet Function ==================
-string TweetFetcher::generateSignature(const string& baseUrl, OAuthParamPairs& parameters)
+std::string TweetFetcher::generateSignature(const std::string& baseUrl, OAuthParamPairs& parameters)
 {
-    string rawParams("");
+    std::string rawParams("");
     // 1. Build parameter strings
     buildRawParamString(parameters, "&", rawParams);
     // 2: Get the base signature string
-    string baseSig = "GET&" + percentEncode(baseUrl) + "&" + percentEncode(rawParams);
+    std::string baseSig = "GET&" + percentEncode(baseUrl) + "&" + percentEncode(rawParams);
 
 	  // 3: Get the signing key
-    string signingKey = percentEncode(consumerSecret) + "&" + percentEncode(accessTokenSecret);
+    std::string signingKey = percentEncode(consumerSecret) + "&" + percentEncode(accessTokenSecret);
 
 	  // 4: Calculate the signature using HMAC_SHA1 algorithm
     BYTE digest[20];
@@ -134,17 +134,17 @@ string TweetFetcher::generateSignature(const string& baseUrl, OAuthParamPairs& p
     hmacsha1.HMAC_SHA1((BYTE*)baseSig.c_str(), baseSig.length(), (BYTE*)signingKey.c_str(), signingKey.length(), digest);
 
     // 5: Base64 encode
-    string b64en = base64_encode(digest, 20);
+    std::string b64en = base64_encode(digest, 20);
 
     // 6: Percent encode the base64 string
     return percentEncode(b64en);
 }
 
-void TweetFetcher::collectRequestPairs(string dataUrl, OAuthParamPairs& requestPairs)
+void TweetFetcher::collectRequestPairs(std::string dataUrl, OAuthParamPairs& requestPairs)
 {
   	size_t pos = dataUrl.find_first_of("&");
   	// For n-1 request pairs
-    while (pos != string::npos) {
+    while (pos != std::string::npos) {
         size_t splitPos = dataUrl.find_first_of("=");
 
         // Add pair to map
@@ -160,7 +160,7 @@ void TweetFetcher::collectRequestPairs(string dataUrl, OAuthParamPairs& requestP
   	requestPairs[dataUrl.substr(0, splitPos)] = percentEncode(dataUrl.substr(splitPos + 1));
 }
 
-void TweetFetcher::collectOAuthParams(const string& signature, OAuthParamPairs& authParams)
+void TweetFetcher::collectOAuthParams(const std::string& signature, OAuthParamPairs& authParams)
 {
   	if (!signature.length()) generateNonceAndTimeStamp();
 
@@ -174,9 +174,9 @@ void TweetFetcher::collectOAuthParams(const string& signature, OAuthParamPairs& 
   	authParams["oauth_version"] = "1.0";
 }
 
-void TweetFetcher::collectParameters(const string& baseUrl,
-                                     const string& dataUrl,
-                                     string& rawParams)
+void TweetFetcher::collectParameters(const std::string& baseUrl,
+                                     const std::string& dataUrl,
+                                     std::string& rawParams)
 {
   	OAuthParamPairs parameters;
 
@@ -187,7 +187,7 @@ void TweetFetcher::collectParameters(const string& baseUrl,
   	collectOAuthParams("", parameters);
 
   	// Create signature using collected parameters
-    string sig = generateSignature(baseUrl, parameters);
+    std::string sig = generateSignature(baseUrl, parameters);
 
   	// Get complete parameters using signature
   	parameters.clear();
@@ -197,18 +197,18 @@ void TweetFetcher::collectParameters(const string& baseUrl,
   	buildRawParamString(parameters, ", ", rawParams);
 }
 
-string TweetFetcher::generateHeader(const string& url)
+std::string TweetFetcher::generateHeader(const std::string& url)
 {
 	// First split URL as base url and data
-    string baseUrl(""), dataUrl(""), httpHeader("");
+    std::string baseUrl(""), dataUrl(""), httpHeader("");
 	size_t pos = url.find_first_of("?");
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
         // Split base and data parts of URL
 		baseUrl = url.substr(0, pos);
 		dataUrl = url.substr(pos + 1);
 
 		// Then collect all the parameters needed for Authentication
-        string rawParams("");
+        std::string rawParams("");
 		collectParameters(baseUrl, dataUrl, rawParams);
 
 		// Get complete header
@@ -221,13 +221,13 @@ string TweetFetcher::generateHeader(const string& url)
 }
 
 void TweetFetcher::buildRawParamString(const OAuthParamPairs& parameters,
-                                       const string& seperator,
-                                       string& paramString)
+                                       const std::string& seperator,
+                                       std::string& paramString)
 {
 	// Append each raw parameter pair and store them in a list
-    StringList paramList;
+    std::list<std::string> paramList;
     for (auto i = parameters.cbegin(); i != parameters.cend(); i++) {
-        string str = i->first;
+        std::string str = i->first;
 		str.append("=");
 		if (seperator == ", ") str.append("\"");
 		str.append(i->second);
@@ -263,7 +263,7 @@ void TweetFetcher::generateNonceAndTimeStamp()
 }
 
 
-void TweetFetcher::extractTextIntoList(StringList& resps, string& response)
+void TweetFetcher::extractTextIntoList(std::list<std::string>& resps, std::string& response)
 {
     if (!response.empty())
     {
@@ -282,7 +282,7 @@ void TweetFetcher::extractTextIntoList(StringList& resps, string& response)
             const Value& rootArr = d["statuses"];
             for (auto &e : rootArr.GetArray())
             {
-                string text = e["text"].GetString();
+                std::string text = e["text"].GetString();
                 resps.push_back(text);
             }
         }
@@ -295,10 +295,10 @@ void TweetFetcher::extractTextIntoList(StringList& resps, string& response)
 }
 
 
-bool TweetFetcher::request(const string& URL, const string& query, int count, int numThreads)
+bool TweetFetcher::request(const std::string& URL, const std::string& query, int count, int numThreads)
 {
 	// Get and set complete OAuth header for request
-    string OAuthHeader = generateHeader(URL+query);
+    std::string OAuthHeader = generateHeader(URL+query);
     if (!OAuthHeader.length())
         return false;
 
@@ -308,7 +308,7 @@ bool TweetFetcher::request(const string& URL, const string& query, int count, in
     #pragma omp parallel num_threads(numThreads)
     {
         // The list to store the parsed response strings
-        StringList tRespList;
+        std::list<std::string> tRespList;
         bool tSuccess = false;
 
         // Create curl handler of this thread
@@ -318,7 +318,7 @@ bool TweetFetcher::request(const string& URL, const string& query, int count, in
         for (int i = 0; i < count / 100 /numThreads; ++i)
         {
             // The raw response string from a single request in json format
-            string resp("");
+            std::string resp("");
 
             // Process CURL request handling
             curl_slist *headers = nullptr;

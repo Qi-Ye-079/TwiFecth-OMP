@@ -11,6 +11,8 @@ CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o: ../include/SHA1/SHA1.h
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o: ../include/SHA1/base64.cpp
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o: ../include/SHA1/base64.h
 
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o: ../src/Sentiment.cpp
+
 CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o: ../include/SHA1/HMAC_SHA1.h
 CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o: ../include/SHA1/SHA1.h
 CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o: ../include/SHA1/base64.h
@@ -44,6 +46,7 @@ CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o: ../include/rapidjson/reader.
 CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o: ../include/rapidjson/stream.h
 CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o: ../src/TweetFetcher.cpp
 
+CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o: ../include/Sentiment.h
 CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o: ../include/TweetFetcher.h
 CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o: ../include/curl/curl.h
 CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o: ../include/curl/curlver.h

@@ -105,9 +105,33 @@ CMakeFiles/TwiFetch-OMP.dir/src/misc.cpp.o.provides: CMakeFiles/TwiFetch-OMP.dir
 CMakeFiles/TwiFetch-OMP.dir/src/misc.cpp.o.provides.build: CMakeFiles/TwiFetch-OMP.dir/src/misc.cpp.o
 
 
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o: CMakeFiles/TwiFetch-OMP.dir/flags.make
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o: ../src/Sentiment.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o -c /home/nanaya/twifetch-omp/src/Sentiment.cpp
+
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nanaya/twifetch-omp/src/Sentiment.cpp > CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.i
+
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nanaya/twifetch-omp/src/Sentiment.cpp -o CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.s
+
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.requires:
+
+.PHONY : CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.requires
+
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.provides: CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TwiFetch-OMP.dir/build.make CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.provides.build
+.PHONY : CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.provides
+
+CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.provides.build: CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o
+
+
 CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o: CMakeFiles/TwiFetch-OMP.dir/flags.make
 CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o: ../src/example.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o -c /home/nanaya/twifetch-omp/src/example.cpp
 
 CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.i: cmake_force
@@ -131,7 +155,7 @@ CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o.provides.build: CMakeFiles/TwiFetc
 
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o: CMakeFiles/TwiFetch-OMP.dir/flags.make
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o: ../include/SHA1/base64.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o -c /home/nanaya/twifetch-omp/include/SHA1/base64.cpp
 
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.i: cmake_force
@@ -155,7 +179,7 @@ CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o.provides.build: CMakeFiles
 
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o: CMakeFiles/TwiFetch-OMP.dir/flags.make
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o: ../include/SHA1/SHA1.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o -c /home/nanaya/twifetch-omp/include/SHA1/SHA1.cpp
 
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.i: cmake_force
@@ -179,7 +203,7 @@ CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o.provides.build: CMakeFiles/T
 
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o: CMakeFiles/TwiFetch-OMP.dir/flags.make
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o: ../include/SHA1/HMAC_SHA1.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o -c /home/nanaya/twifetch-omp/include/SHA1/HMAC_SHA1.cpp
 
 CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.i: cmake_force
@@ -205,6 +229,7 @@ CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o.provides.build: CMakeFi
 TwiFetch__OMP_OBJECTS = \
 "CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o" \
 "CMakeFiles/TwiFetch-OMP.dir/src/misc.cpp.o" \
+"CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o" \
 "CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o" \
 "CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o" \
 "CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o" \
@@ -215,13 +240,14 @@ TwiFetch__OMP_EXTERNAL_OBJECTS =
 
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/src/misc.cpp.o
+TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/include/SHA1/HMAC_SHA1.cpp.o
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/build.make
 TwiFetch-OMP: CMakeFiles/TwiFetch-OMP.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable TwiFetch-OMP"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/nanaya/twifetch-omp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable TwiFetch-OMP"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/TwiFetch-OMP.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -231,6 +257,7 @@ CMakeFiles/TwiFetch-OMP.dir/build: TwiFetch-OMP
 
 CMakeFiles/TwiFetch-OMP.dir/requires: CMakeFiles/TwiFetch-OMP.dir/src/TweetFetcher.cpp.o.requires
 CMakeFiles/TwiFetch-OMP.dir/requires: CMakeFiles/TwiFetch-OMP.dir/src/misc.cpp.o.requires
+CMakeFiles/TwiFetch-OMP.dir/requires: CMakeFiles/TwiFetch-OMP.dir/src/Sentiment.cpp.o.requires
 CMakeFiles/TwiFetch-OMP.dir/requires: CMakeFiles/TwiFetch-OMP.dir/src/example.cpp.o.requires
 CMakeFiles/TwiFetch-OMP.dir/requires: CMakeFiles/TwiFetch-OMP.dir/include/SHA1/base64.cpp.o.requires
 CMakeFiles/TwiFetch-OMP.dir/requires: CMakeFiles/TwiFetch-OMP.dir/include/SHA1/SHA1.cpp.o.requires

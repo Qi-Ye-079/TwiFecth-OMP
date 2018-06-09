@@ -5,13 +5,12 @@
 
 // Typs aliases
 using StringList = std::list<std::string>;
-using Clock = std::chrono::high_resolution_clock;
 
 int main(int argc, char *argv[])
 {
-    std::string query = "Trump";  // Search query
-    int count = 800;              // Number of tweets to fetch
-    int numThreads = 8;           // Number of threads to use
+    std::string query = "Trump";        // Search query
+    int count = 3000;                    // Number of tweets to fetch
+    int numThreads = 6;                 // Number of threads to use
     bool bAnalyzeSentiment = true;      // Whether or not analyze sentiment. Set it to false to disable sentiment analysis.
 
     // keys and tokens from the Twitter App.
@@ -33,22 +32,14 @@ int main(int argc, char *argv[])
         {
             // Print current status and all fetched tweets
             std::cout << tf << std::endl;
-            for (const std::string &s: *resps)
-                std::cout << s << std::endl;
+            for (const std::string &s: *resps)  std::cout << s << std::endl;
             std::cout << "==========================================================" << std::endl;
 
             if (bAnalyzeSentiment)
             {
-                // Initialize python environment and sentiment_analysnis module (crucial steps!!)
-                Py_Initialize();
-                initsentiment_analysis();
-
                 // Analyze the sentiments of fetched tweets and return the results pair (tuple from Python)
                 std::pair<int, int> results = sentiment_count(resps);
                 std::cout << "Number of positive: " << results.first << ", number of negative: " << results.second << "." << std::endl;
-
-                // Never forget to end python session
-                Py_Finalize();
             }
         }
         else

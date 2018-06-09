@@ -37,6 +37,10 @@ TweetFetcher::TweetFetcher(const std::string& cKey,
 
     // Initialize winsock
     curl_global_init(CURL_GLOBAL_ALL);
+
+    // Initialize Python environment and sentiment analysis module
+    Py_Initialize();
+    initsentiment_analysis();
 }
 
 TweetFetcher::TweetFetcher(const TweetFetcher &other):
@@ -52,6 +56,10 @@ TweetFetcher::TweetFetcher(const TweetFetcher &other):
 
     // Initialize the curl globally
     curl_global_init(CURL_GLOBAL_ALL);
+
+    // Initialize Python environment and sentiment_analysis module
+    Py_Initialize();
+    initsentiment_analysis();
 }
 
 TweetFetcher& TweetFetcher::operator=(const TweetFetcher &other)
@@ -73,9 +81,6 @@ TweetFetcher& TweetFetcher::operator=(const TweetFetcher &other)
     delete responses;
     // Then copy the list from other
     responses = new std::list<std::string>(*other.responses);
-
-    // Initialize the curl globally
-    curl_global_init(CURL_GLOBAL_ALL);
 }
 
 TweetFetcher::~TweetFetcher()
@@ -85,20 +90,39 @@ TweetFetcher::~TweetFetcher()
     // free the response's memory
     responses->clear();
     delete responses;
+
+    // End Python session
+    Py_Finalize();
 }
 
-bool TweetFetcher::searchWithOmp(const std::string& query, int count, int numThreads)
-{
-    // Build the search url with query
-    std::string url = "https://api.twitter.com/1.1/search/tweets.json?count=100&lang=en&include_entities=false&q=";
-
-    // Start the https request
-    return request(url, query, count, numThreads); //&& (response.size != 0);
-}
+// Getters
+std::string TweetFetcher::getConsumetKey() const  {   return consumerKey;   }
+std::string TweetFetcher::getConsumetSecret() const  {   return consumerSecret;  }
+std::string TweetFetcher::getAccessToken() const  {  return accessToken;  }
+std::string TweetFetcher::getAccessTokenSecret() const  {   return accessTokenSecret;  }
 
 std::list<std::string>* TweetFetcher::getResponseListPtr() const
 {
     return responses;
+}
+
+
+// Setters
+void TweetFetcher::setConsumerKey(std::string cKey) { consumerKey = cKey; }
+void TweetFetcher::setConsumerSecret(std::string cSecret) { consumerSecret = cSecret; }
+void TweetFetcher::setAccessToken(std::string aToken) { accessToken = aToken; }
+void TweetFetcher::setAccessTokenSecret(std::string aTokenSecret) { accessTokenSecret = aTokenSecret; }
+
+
+bool TweetFetcher::searchWithOmp(const std::string& query, int count, int numThreads)
+{
+    // Build the search url with query
+    int requestCount = std::min((count/numThreads), 100);
+    std::string url = "https://api.twitter.com/1.1/search/tweets.json?count="
+                      + std::to_string(requestCount) + "&lang=en&include_entities=false&q=";
+
+    // Start the https request
+    return request(url, query, count, numThreads);
 }
 
 std::ostream& operator<<(std::ostream &os, const TweetFetcher &tf)
@@ -312,7 +336,8 @@ bool TweetFetcher::request(const std::string& URL, const std::string& query, int
         CURL *threadCurl = curl_easy_init();
 
         // Loop to fetch the tweets
-        for (int i = 0; i < count / 100 /numThreads; ++i)
+        int numLoops = std::max(1, (count/100/numThreads));
+        for (int i = 0; i < numLoops; ++i)
         {
             // The raw response string from a single request in json format
             std::string resp("");

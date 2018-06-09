@@ -4,6 +4,7 @@
 #include <omp.h>
 #include "curl/curl.h"
 #include "misc.h"
+#include "Sentiment.h"
 
 // Type definitions
 using OAuthParamPairs = std::map<std::string, std::string>;
@@ -41,22 +42,33 @@ private:
     void extractTextIntoList(std::list<std::string>& resps, std::string& responseStr);
 
 public:
+    // Constructors
     TweetFetcher();
-
     TweetFetcher(const std::string &cKey,
                  const std::string &cSecret,
                  const std::string &aToken,
                  const std::string &aTokenSecret);
-
     TweetFetcher(const TweetFetcher &other);
-
     TweetFetcher& operator=(const TweetFetcher &other);
 
+    // Destrcutor
     ~TweetFetcher();
 
+    // Search for tweets with OpenMP
     bool searchWithOmp(const std::string &query, int count, int numThreads = 1);
 
+    // Getters
+    std::string getConsumetKey() const;
+    std::string getConsumetSecret() const;
+    std::string getAccessToken() const;
+    std::string getAccessTokenSecret() const;
     std::list<std::string>* getResponseListPtr() const;
+
+    // Setters
+    void setConsumerKey(std::string cKey);
+    void setConsumerSecret(std::string cSecret);
+    void setAccessToken(std::string aToken);
+    void setAccessTokenSecret(std::string aTokenSecret);
 
     friend std::ostream& operator<<(std::ostream &os, const TweetFetcher &tf);
 };

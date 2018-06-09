@@ -5,8 +5,10 @@ which can fetch a large number of tweets in parallel using multiple threads spaw
 huge performance improvement compared to fetching such a large number of tweets in serial.
 
 # UPDATE
-
 Now Cython has been used to bridge C++ and Python codes.
+
+# Platform
+Developed, tested and run on Ubuntu 16.04.4 LTS.
 
 # Usage 
 Check out the [example.cpp](https://bitbucket.org/QiYe079/twifetch-omp/src/master/src/example.cpp) for simple use case.
@@ -14,7 +16,7 @@ Check out the [example.cpp](https://bitbucket.org/QiYe079/twifetch-omp/src/maste
 # Prerequisite
 * 	Python-dev 2.7 if you would like analyze the sentiments of fetched tweets.
 *	UPDATED: Cython 0.28.3 (no ganrantee that newer version will work). Just use `pip install cython` to install it.
-*	OpenSSL - should be already in the Ubuntu system. You also need to find the path of `ssl` directory to install CURL.
+*	OpenSSL - should be already in the Ubuntu system. However, you also need OpenSSL library to enable SSL support for installation. Simply run `sudo apt-get install libssl-dev` on terminal.
 *	CURL & libcurl - make sure to install with SSL enabled and have HTTPS protocol available after installation. Check out the official [installation guide](https://curl.haxx.se/docs/install.html).
 *	OpenMP - already available: should be already with GCC on Linux.
 *	rapidjson - already available: included in the project. Check out the original [Github repo for rapidjson](https://github.com/Tencent/rapidjson) for more information.

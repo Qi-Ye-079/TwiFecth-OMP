@@ -271,9 +271,6 @@ void TweetFetcher::extractTextIntoList(std::list<std::string>& resps, std::strin
         Document d;
         d.Parse(response.c_str());
 
-        // Reset response memory
-        // response.clear();
-
         assert(d.IsObject());
 
         if (d.HasMember("statuses"))
@@ -336,7 +333,7 @@ bool TweetFetcher::request(const std::string& URL, const std::string& query, int
                 extractTextIntoList(tRespList, resp);
 
                 // Set success to true
-                tSuccess = tSuccess || true;
+                tSuccess = true;
             }
 
             // Free all curl headers

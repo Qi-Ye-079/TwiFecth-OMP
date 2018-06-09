@@ -4,4 +4,4 @@
 *.pyc
 
 # build CmakeCache.txt
-build/
+/build/

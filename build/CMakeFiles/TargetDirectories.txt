@@ -1,4 +1,0 @@
-/home/nanaya/twifetch-omp/build/CMakeFiles/edit_cache.dir
-/home/nanaya/twifetch-omp/build/CMakeFiles/rebuild_cache.dir
-/home/nanaya/twifetch-omp/build/CMakeFiles/twifetchomp.dir
-/home/nanaya/twifetch-omp/build/CMakeFiles/TwiFetch-OMP.dir

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtwifetchomp.a  CMakeFiles/twifetchomp.dir/src/TweetFetcher.cpp.o CMakeFiles/twifetchomp.dir/src/misc.cpp.o CMakeFiles/twifetchomp.dir/src/Sentiment.cpp.o CMakeFiles/twifetchomp.dir/src/example.cpp.o CMakeFiles/twifetchomp.dir/include/SHA1/base64.cpp.o CMakeFiles/twifetchomp.dir/include/SHA1/SHA1.cpp.o CMakeFiles/twifetchomp.dir/include/SHA1/HMAC_SHA1.cpp.o
-/usr/bin/ranlib libtwifetchomp.a

@@ -7,7 +7,7 @@ project(TwiFetch-OMP)
 include_directories(include)
 
 # add all .cpp files in src and SHA1
-file(GLOB SOURCES "src/*.cpp" "src/python/*.py" "include/SHA1/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/python/*" "include/SHA1/*.cpp")
 
 # forcing C++11 standard
 set(CMAKE_CXX_STANDARD 11)

@@ -5,3 +5,5 @@
 
 # build CmakeCache.txt
 /build/
+
+*.user

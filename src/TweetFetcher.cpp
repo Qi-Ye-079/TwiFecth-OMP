@@ -21,10 +21,6 @@ static size_t write_callback(char *contents, size_t size, size_t nmemb, void *us
 
 
 // ================= Public functions of TweetFetcher ==================
-TweetFetcher::TweetFetcher(): TweetFetcher("", "", "", "")
-{
-}
-
 TweetFetcher::TweetFetcher(const std::string& cKey,
                            const std::string& cSecret,
                            const std::string& aToken,
@@ -32,9 +28,6 @@ TweetFetcher::TweetFetcher(const std::string& cKey,
     consumerKey(cKey), consumerSecret(cSecret), accessToken(aToken), accessTokenSecret(aTokenSecret),
     nonce(""), timeStamp("")
 {
-    // Allocate the responses list on the heap
-    responses = new std::list<std::string>();
-
     // Initialize winsock
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -51,9 +44,6 @@ TweetFetcher::TweetFetcher(const TweetFetcher &other):
     nonce(other.nonce),
     timeStamp(other.timeStamp)
 {
-    // Copy the contents of the response list from other tweet fetcher
-    responses = new std::list<std::string>(*other.responses);
-
     // Initialize the curl globally
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -75,21 +65,12 @@ TweetFetcher& TweetFetcher::operator=(const TweetFetcher &other)
     accessTokenSecret = other.accessTokenSecret;
     nonce = other.nonce;
     timeStamp = other.timeStamp;
-
-    // First deallocate the memory of this response list
-    responses->clear();
-    delete responses;
-    // Then copy the list from other
-    responses = new std::list<std::string>(*other.responses);
 }
 
 TweetFetcher::~TweetFetcher()
 {
     // Clean the CURL
-  	curl_global_cleanup();
-    // free the response's memory
-    responses->clear();
-    delete responses;
+    curl_global_cleanup();
 
     // End Python session
     Py_Finalize();
@@ -101,12 +82,6 @@ std::string TweetFetcher::getConsumetSecret() const  {   return consumerSecret; 
 std::string TweetFetcher::getAccessToken() const  {  return accessToken;  }
 std::string TweetFetcher::getAccessTokenSecret() const  {   return accessTokenSecret;  }
 
-std::list<std::string>* TweetFetcher::getResponseListPtr() const
-{
-    return responses;
-}
-
-
 // Setters
 void TweetFetcher::setConsumerKey(std::string cKey) { consumerKey = cKey; }
 void TweetFetcher::setConsumerSecret(std::string cSecret) { consumerSecret = cSecret; }
@@ -114,7 +89,7 @@ void TweetFetcher::setAccessToken(std::string aToken) { accessToken = aToken; }
 void TweetFetcher::setAccessTokenSecret(std::string aTokenSecret) { accessTokenSecret = aTokenSecret; }
 
 
-bool TweetFetcher::searchWithOmp(const std::string& query, int count, int numThreads)
+bool TweetFetcher::searchWithOmp(ResponseList& OutList, const std::string& query, int count, int numThreads)
 {
     // Build the search url with query
     int requestCount = std::min((count/numThreads), 100);
@@ -122,7 +97,7 @@ bool TweetFetcher::searchWithOmp(const std::string& query, int count, int numThr
                       + std::to_string(requestCount) + "&lang=en&include_entities=false&q=";
 
     // Start the https request
-    return request(url, query, count, numThreads);
+    return request(OutList, url, query, count, numThreads);
 }
 
 std::ostream& operator<<(std::ostream &os, const TweetFetcher &tf)
@@ -132,8 +107,6 @@ std::ostream& operator<<(std::ostream &os, const TweetFetcher &tf)
     os << "Consumer Secret: " << tf.consumerSecret << std::endl;
     os << "Access Token: " << tf.accessToken << std::endl;
     os << "Access Token Secret: " << tf.accessTokenSecret << std::endl;
-    os << "============================================================" << std::endl;
-    os << "There are now " << tf.responses->size() << " responses stored in this Tweet Fetcher." << std::endl;
     return os;
 }
 
@@ -287,7 +260,7 @@ void TweetFetcher::generateNonceAndTimeStamp()
 }
 
 
-void TweetFetcher::extractTextIntoList(std::list<std::string>& resps, std::string& response)
+void TweetFetcher::extractTextIntoList(ResponseList& resps, std::string& response)
 {
     if (!response.empty())
     {
@@ -316,7 +289,7 @@ void TweetFetcher::extractTextIntoList(std::list<std::string>& resps, std::strin
 }
 
 
-bool TweetFetcher::request(const std::string& URL, const std::string& query, int count, int numThreads)
+bool TweetFetcher::request(ResponseList& OutList, const std::string& URL, const std::string& query, int count, int numThreads)
 {
 	// Get and set complete OAuth header for request
     std::string OAuthHeader = generateHeader(URL+query);
@@ -337,7 +310,7 @@ bool TweetFetcher::request(const std::string& URL, const std::string& query, int
 
         // Loop to fetch the tweets
         int numLoops = std::max(1, (count/100/numThreads));
-        for (int i = 0; i < numLoops; ++i)
+        for (uint8_t i = 0; i < numLoops; ++i)
         {
             // The raw response string from a single request in json format
             std::string resp("");
@@ -372,7 +345,7 @@ bool TweetFetcher::request(const std::string& URL, const std::string& query, int
         #pragma omp critical
         {
             success = success || tSuccess;
-            responses->splice(responses->end(), tRespList);
+            OutList.splice(OutList.end(), tRespList);
         }
     }
 

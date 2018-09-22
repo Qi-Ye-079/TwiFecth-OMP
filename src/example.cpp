@@ -3,8 +3,7 @@
 #include "TweetFetcher.h"
 #include "Sentiment.h"
 
-// Typs aliases
-using StringList = std::list<std::string>;
+#define OUTPUT // Define a parameter is output (by non-const reference)
 
 int main(int argc, char *argv[])
 {
@@ -24,28 +23,34 @@ int main(int argc, char *argv[])
     TweetFetcher tf(consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
     // Search tweets in parallel with OpenMP
-    StringList *resps = nullptr;
-    if (tf.searchWithOmp(query, count, numThreads))
+    std::list<std::string> resps;
+    if (!tf.searchWithOmp(OUTPUT resps, query, count, numThreads))
     {
-        resps = tf.getResponseListPtr();
-        if (resps && !resps->empty())
-        {
-            // Print current status and all fetched tweets
-            std::cout << tf << std::endl;
-            for (const std::string &s: *resps)  std::cout << s << std::endl;
-            std::cout << "==========================================================" << std::endl;
+        std::cout << "Something went wrong when fetching tweets." << std::endl;
+        return -1;
+    }
 
-            if (bAnalyzeSentiment)
-            {
-                // Analyze the sentiments of fetched tweets and return the results pair (tuple from Python)
-                std::pair<int, int> results = sentiment_count(resps);
-                std::cout << "Number of positive: " << results.first << ", number of negative: " << results.second << "." << std::endl;
-            }
-        }
-        else
-        {
-            std::cout << "Oops!! No responses??" << std::endl;
-        }
+    if (resps.empty())
+    {
+        std::cout << "Oops!! No responses??" << std::endl;
+        return 1;
+    }
+
+    // Print current status and all fetched tweets
+    std::cout << tf << std::endl;
+    std::cout << "There are " << resps.size() << " tweets fetched." << std::endl;
+    std::cout << "============================================================" << std::endl;
+    for (const auto& s: resps)
+    {
+        std::cout << s << std::endl;
+    }
+    std::cout << "==========================================================" << std::endl;
+
+    if (bAnalyzeSentiment)
+    {
+        // Analyze the sentiments of fetched tweets and return the results pair (tuple from Python)
+        auto results = sentiment_count(&resps);
+        std::cout << "Number of positive: " << results.first << ", number of negative: " << results.second << ".\n" << std::endl;
     }
 
 	return 0;

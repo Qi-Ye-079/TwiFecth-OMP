@@ -10,7 +10,7 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp" "src/python/*" "include/SHA1/*.cpp")
 
 # forcing C++11 standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Add the executable files
 add_executable(${PROJECT_NAME} ${SOURCES})

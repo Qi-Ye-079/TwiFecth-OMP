@@ -89,7 +89,7 @@ void TweetFetcher::setAccessToken(std::string aToken) { accessToken = aToken; }
 void TweetFetcher::setAccessTokenSecret(std::string aTokenSecret) { accessTokenSecret = aTokenSecret; }
 
 
-bool TweetFetcher::searchWithOmp(ResponseList& OutList, const std::string& query, int count, int numThreads)
+bool TweetFetcher::searchTweets(ResponseList& OutList, const std::string& query, int count, int numThreads)
 {
     // Build the search url with query
     int requestCount = std::min((count/numThreads), 100);
@@ -260,7 +260,7 @@ void TweetFetcher::generateNonceAndTimeStamp()
 }
 
 
-void TweetFetcher::extractTextIntoList(ResponseList& resps, std::string& response)
+void TweetFetcher::extractTextIntoList(ResponseList& resps, const std::string& response)
 {
     if (!response.empty())
     {
@@ -302,7 +302,7 @@ bool TweetFetcher::request(ResponseList& OutList, const std::string& URL, const 
     #pragma omp parallel num_threads(numThreads)
     {
         // The list to store the parsed response strings
-        std::list<std::string> tRespList;
+        ResponseList tRespList;
         bool tSuccess = false;
 
         // Create curl handler of this thread

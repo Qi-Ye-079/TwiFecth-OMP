@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     // Search tweets in parallel with OpenMP
     std::list<std::string> resps;
-    if (!tf.searchWithOmp(OUTPUT resps, query, count, numThreads))
+    if (!tf.searchTweets(OUTPUT resps, query, count, numThreads))
     {
         std::cout << "Something went wrong when fetching tweets." << std::endl;
         return -1;

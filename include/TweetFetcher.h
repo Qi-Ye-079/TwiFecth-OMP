@@ -2,15 +2,17 @@
 #define TWEETAPI_H
 
 #include <omp.h>
+#include <memory>
 #include "curl/curl.h"
 #include "misc.h"
 #include "Sentiment.h"
 
-// Type definitions
-using OAuthParamPairs = std::map<std::string, std::string>;
-
 // Tweet fetcher class
 class TweetFetcher {
+    // Type aliases
+    using OAuthParamPairs = std::map<std::string, std::string>;
+    using ResponseList = std::list<std::string>;
+
 private:
     std::string consumerKey;
     std::string consumerSecret;
@@ -20,7 +22,7 @@ private:
     std::string timeStamp;
 
     // Fetched response from the Twitter's API
-    std::list<std::string> *responses;
+    ResponseList* responses;
 
     // ======== Helper functions to generate OAuth header ===========
     void generateNonceAndTimeStamp();
